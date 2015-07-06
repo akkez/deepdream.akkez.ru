@@ -7,10 +7,9 @@ use yii\widgets\LinkPager;
 /* @var $pictures app\models\Picture[] */
 /* @var $model app\models\LoginForm */
 
-$this->title = 'Gallery';
+$this->title = 'Queue';
 ?>
 <h1><?= Html::encode($this->title) ?></h1>
-<p><a href="/gallery/queue">View queue</a></p>
 
 <?php foreach ($pictures as $picture)
 {
@@ -19,11 +18,11 @@ $this->title = 'Gallery';
 	{
 		$color = 'background-color: #aaf';
 	}
-	echo Html::a(Html::img('/ready/' . $picture->output, ['style' => 'padding: 15px; cursor: pointer; ' . $color, 'title' => 'Click to view source']), '/images/' . $picture->source);
+	echo Html::img('/images/' . $picture->source, ['style' => 'padding: 15px; ' . $color]);
 } ?>
 <?php if (count($pictures) == 0)
 {
-	?><p>There arent any processed images now. Try later.</p><?php
+	?><p>There arent any queued images now. Try later.</p><?php
 } ?>
 
 <div class="row">
