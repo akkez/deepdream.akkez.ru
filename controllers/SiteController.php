@@ -6,7 +6,6 @@ use app\helpers\Helper;
 use app\models\Picture;
 use Yii;
 use yii\web\Controller;
-use app\models\LoginForm;
 use app\models\UploadForm;
 use yii\web\HttpException;
 use yii\web\UploadedFile;
@@ -77,6 +76,7 @@ class SiteController extends Controller
 				$picture->save();
 
 				\Yii::$app->getSession()->setFlash('success', 'Your image were successfully uploaded. Converted image will be sent on your email. Thank you!');
+
 				return $this->redirect('/');
 			}
 		}
@@ -88,11 +88,26 @@ class SiteController extends Controller
 
 	public function actionAbout()
 	{
-		$picture = Picture::findOne(['id' => 1]);
-		\Yii::$app->mailer
-			->compose('result', ['picture' => $picture])->setTo('akke.podstavnoy@gmail.com')
-			->send();
-
 		return $this->render('about');
+	}
+
+	public function actionPong($id)
+	{
+		$picture = Picture::findOne(['id' => $id, 'state' => 'finishing']);
+		if ($picture == null)
+		{
+			throw new HttpException(404, 'There are no memes here');
+		}
+		/* @var \app\models\Picture $picture */
+		$path = \Yii::$app->basePath . '/web/ready/' . $picture->output;
+		$img  = imagecreatefrompng($path); #omg prosto omg
+		unlink($path);
+		imagejpeg($img, $path, 100);
+
+		$picture->state = 'ready';
+		$picture->save();
+
+		\Yii::$app->mailer->compose('result', ['picture' => $picture])->setTo($picture->email)->setSubject('Your DeepDream picture')->send();
+		echo 'ok';
 	}
 }
