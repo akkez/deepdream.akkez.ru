@@ -13,6 +13,7 @@ use Yii;
  * @property string $ip
  * @property string $source
  * @property string $output
+ * @property string $hash
  * @property integer $status
  */
 class Picture extends \yii\db\ActiveRecord

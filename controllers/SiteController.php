@@ -24,10 +24,11 @@ class SiteController extends Controller
 	public function actionIndex()
 	{
 		$pendingImageCount = Picture::find()->where(['state' => 'new'])->count();
-		$lastPicture = Picture::find()->where(['state' => 'pending'])->orderBy('id ASC')->one();
+		$lastPicture       = Picture::find()->where(['state' => 'pending'])->orderBy('id ASC')->one();
+
 		return $this->render('index', [
 			'pendingImageCount' => $pendingImageCount,
-			'lastPicture' => $lastPicture,
+			'lastPicture'       => $lastPicture,
 		]);
 	}
 
@@ -71,12 +72,25 @@ class SiteController extends Controller
 					imagejpeg($img, $filename, 100);
 				}
 
+				$hash  = sha1(file_get_contents($filename));
+				$count = Picture::find()->where(['hash' => $hash])->count();
+				if ($count > 0)
+				{
+					$model->addError('image', 'Sorry, image that you requested are ALREADY in queue. Please wait and/or look into gallery. Thank you!');
+					unlink($filename);
+
+					return $this->render('upload', [
+						'model' => $model
+					]);
+				}
+
 				$picture         = new Picture();
 				$picture->email  = $model->email;
 				$picture->ip     = \Yii::$app->getRequest()->getUserIP();
 				$picture->source = $srcName;
 				$picture->output = null;
 				$picture->state  = 'new';
+				$picture->hash   = $hash;
 				$picture->status = 0;
 				$picture->save();
 
@@ -114,5 +128,25 @@ class SiteController extends Controller
 
 		\Yii::$app->mailer->compose('result', ['picture' => $picture])->setTo($picture->email)->setSubject('Your DeepDream picture')->send();
 		echo 'ok';
+	}
+
+	public function actionCheck()
+	{
+		$pictures = Picture::find()->where(['hash' => ''])->all();
+		/* @var \app\models\Picture[] $pictures */
+		foreach ($pictures as $pic)
+		{
+			$filename = \Yii::$app->basePath . '/web/images/' . $pic->source;
+			if (!file_exists($filename))
+			{
+				echo 'file ' . $filename . ' not exists. ';
+				continue;
+			}
+			$hash      = sha1(file_get_contents($filename));
+			$pic->hash = $hash;
+			echo 'file ' . $filename . ': hash = ' . $hash . '. ';
+			$pic->save();
+		}
+		echo 'done.';
 	}
 }
