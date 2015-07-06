@@ -23,7 +23,12 @@ class SiteController extends Controller
 
 	public function actionIndex()
 	{
-		return $this->render('index');
+		$pendingImageCount = Picture::find()->where(['state' => 'new'])->count();
+		$lastPicture = Picture::find()->where(['state' => 'pending'])->orderBy('id ASC')->one();
+		return $this->render('index', [
+			'pendingImageCount' => $pendingImageCount,
+			'lastPicture' => $lastPicture,
+		]);
 	}
 
 	public function actionUpload()

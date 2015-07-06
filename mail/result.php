@@ -8,7 +8,7 @@
 /* @var app\models\Picture $picture */
 
 ?>
-<h1>Your image were processed.</h1>
+<h1>Here is your image:</h1>
 <p><img src="http://deepdream.akkez.ru/ready/<?php echo $picture->output; ?>" alt=""/></p>
 
 <p>Enjoy!</p>
