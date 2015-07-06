@@ -2,95 +2,97 @@
 
 namespace app\controllers;
 
+use app\helpers\Helper;
+use app\models\Picture;
 use Yii;
-use yii\filters\AccessControl;
 use yii\web\Controller;
-use yii\filters\VerbFilter;
 use app\models\LoginForm;
-use app\models\ContactForm;
+use app\models\UploadForm;
+use yii\web\HttpException;
+use yii\web\UploadedFile;
 
 class SiteController extends Controller
 {
-    public function behaviors()
-    {
-        return [
-            'access' => [
-                'class' => AccessControl::className(),
-                'only' => ['logout'],
-                'rules' => [
-                    [
-                        'actions' => ['logout'],
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ],
-                ],
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'logout' => ['post'],
-                ],
-            ],
-        ];
-    }
+	public function actions()
+	{
+		return [
+			'error' => [
+				'class' => 'yii\web\ErrorAction',
+			],
+		];
+	}
 
-    public function actions()
-    {
-        return [
-            'error' => [
-                'class' => 'yii\web\ErrorAction',
-            ],
-            'captcha' => [
-                'class' => 'yii\captcha\CaptchaAction',
-                'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
-            ],
-        ];
-    }
+	public function actionIndex()
+	{
+		return $this->render('index');
+	}
 
-    public function actionIndex()
-    {
-        return $this->render('index');
-    }
+	public function actionUpload()
+	{
+		$model = new UploadForm();
+		if ($model->load(Yii::$app->request->post()))
+		{
+			$image        = UploadedFile::getInstance($model, 'image');
+			$model->image = $image;
+			if ($model->validate() && $model->check())
+			{
+				$size = getimagesize($image->tempName);
+				list($width, $height, $type) = $size;
+				if ($type == IMAGETYPE_JPEG)
+				{
+					$img = imagecreatefromjpeg($image->tempName);
+				}
+				else if ($type == IMAGETYPE_PNG)
+				{
+					$img = imagecreatefrompng($image->tempName);
+				}
+				else
+				{
+					throw new HttpException(400, 'Bad image');
+				}
+				$srcName  = Helper::gen_uuid() . '.jpg';
+				$filename = \Yii::$app->basePath . '/web/images/' . $srcName;
 
-    public function actionLogin()
-    {
-        if (!\Yii::$app->user->isGuest) {
-            return $this->goHome();
-        }
+				$k = 650;
+				if (!($width <= $k && $height <= $k))
+				{
+					$minSide = (int)(min($width, $height) * $k / max($width, $height));
+					list($newWidth, $newHeight) = ($width > $height) ? [$k, $minSide] : [$minSide, $k];
+					$newImage = imagecreatetruecolor($newWidth, $newHeight);
+					imagecopyresampled($newImage, $img, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
+					imagejpeg($newImage, $filename, 100);
+				}
+				else
+				{
+					imagejpeg($img, $filename, 100);
+				}
 
-        $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
-        } else {
-            return $this->render('login', [
-                'model' => $model,
-            ]);
-        }
-    }
+				$picture         = new Picture();
+				$picture->email  = $model->email;
+				$picture->ip     = \Yii::$app->getRequest()->getUserIP();
+				$picture->source = $srcName;
+				$picture->output = null;
+				$picture->state  = 'new';
+				$picture->status = 0;
+				$picture->save();
 
-    public function actionLogout()
-    {
-        Yii::$app->user->logout();
+				\Yii::$app->getSession()->setFlash('success', 'Your image were successfully uploaded. Converted image will be sent on your email. Thank you!');
+				return $this->redirect('/');
+			}
+		}
 
-        return $this->goHome();
-    }
+		return $this->render('upload', [
+			'model' => $model
+		]);
+	}
 
-    public function actionContact()
-    {
-        $model = new ContactForm();
-        if ($model->load(Yii::$app->request->post()) && $model->contact(Yii::$app->params['adminEmail'])) {
-            Yii::$app->session->setFlash('contactFormSubmitted');
+	public function actionAbout()
+	{
+		$picture = Picture::findOne(['id' => 1]);
+		\Yii::$app->mailer
+			->compose('result', ['picture' => $picture])->setTo('akke.podstavnoy@gmail.com')
+			->send();
 
-            return $this->refresh();
-        } else {
-            return $this->render('contact', [
-                'model' => $model,
-            ]);
-        }
-    }
-
-    public function actionAbout()
-    {
-        return $this->render('about');
-    }
+		return $this->render('about');
+	}
 }
