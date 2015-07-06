@@ -13,11 +13,12 @@ $this->title = 'Gallery';
 
 <?php foreach ($pictures as $picture)
 {
-	echo Html::img('/ready/' . $picture->output, ['style' => 'padding: 15px;']);
+	echo Html::a(Html::img('/ready/' . $picture->output, ['style' => 'padding: 15px; cursor: pointer', 'title' => 'Click to view source']), '/images/' . $picture->source);
 } ?>
-<?php if (count($pictures) == 0) {
+<?php if (count($pictures) == 0)
+{
 	?><p>There arent any processed images now. Try later.</p><?php
-}?>
+} ?>
 
 <div class="row">
 	<div class="col-md-12">
