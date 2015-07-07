@@ -1,6 +1,7 @@
 <?php
 
 $params = require(__DIR__ . '/params.php');
+$mailerKey = require(__DIR__ . '/mailerKey.php');
 
 $config = [
 	'id'         => 'dream',
@@ -32,7 +33,7 @@ $config = [
 		],
 		'mailer'       => [
 			'class'  => 'nickcv\mandrill\Mailer',
-			'apikey' => 'oY41KRbe9H_qbdw6fLSnRw',
+			'apikey' => $mailerKey,
 		],
 		'log'          => [
 			'traceLevel' => YII_DEBUG ? 3 : 0,
