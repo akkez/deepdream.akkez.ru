@@ -15,6 +15,29 @@ $this->title = 'DeepDream';
 	</div>
 
 	<div class="body-content">
+		<?php if ($pendingImageCount == 0): ?>
+			<p class="text-center"><b>Queue is empty.</b></p>
+		<?php else: ?>
+			<p class="text-center" style="font-size: 18px"><b id="queueLengthTop"><?php echo $pendingImageCount; ?></b> images in queue</p>
+		<?php endif; ?>
+		<br/>
+		<p class="text-center">Last pictures:</p>
+
+		<div class="row">
+			<?php $i = 0;
+			foreach ($lastPictures as $picture) { ?>
+
+			<div class="col-md-3 text-center img-box">
+				<a href="/ready/<?php echo $picture->output; ?>">
+					<img src="/ready/<?php echo $picture->output; ?>" alt=""/>
+				</a>
+			</div>
+			<?php $i++;
+			if ($i == 4 || $i == 8) { ?></div>
+		<div class="row"><?php } ?>
+			<?php } ?>
+		</div>
+
 		<div class="row">
 			<div class="col-md-12">
 				<?php if ($pendingImageCount == 0): ?>
@@ -85,6 +108,7 @@ $script = <<<JS
 					}
 					var response = answer.images;
 					$("#queueLength").text(answer.queue);
+					$("#queueLengthTop").text(answer.queue);
 					var childs = $('.imgs').children(".p-img");
 					for (var i = 0; i < childs.length; i++) {
 						var id = $(childs[i]).attr('id').replace("image-", "");
