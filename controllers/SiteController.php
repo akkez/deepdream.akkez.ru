@@ -127,7 +127,7 @@ class SiteController extends Controller
 				$picture->status = 0;
 				$picture->save();
 
-				\Yii::$app->getSession()->setFlash('success', 'Your image were successfully uploaded. Converted image will be sent on your email. Thank you!');
+				\Yii::$app->getSession()->setFlash('success', 'Your image were successfully uploaded. Converted image will be ready after ~'. Helper::formatHourAndMin($readyTime). ' and sent on your email. Thank you!');
 
 				return $this->redirect('/');
 			}
