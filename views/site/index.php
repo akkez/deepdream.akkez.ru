@@ -1,5 +1,7 @@
 <?php
 /* @var $this yii\web\View */
+use yii\helpers\Html;
+
 $this->title = 'DeepDream';
 ?>
 <div class="site-index">
@@ -26,23 +28,99 @@ $this->title = 'DeepDream';
 
 				<?php if (count($pendingPictures) > 0): ?>
 					<p class="text-center">These images are now processing: </p>
-					<?php foreach ($pendingPictures as $picture)
-					{ ?>
-						<?php $progress = (int)(100.0 * $picture->status / 40); ?>
-						<p class="text-center"><img src="/images/<?php echo $picture->source; ?>" alt=""/></p>
-						<div class="row">
-							<div class="col-xs-6 col-xs-offset-3">
-								<div class="progress">
-									<div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="<?php echo $progress; ?>" aria-valuemin="0"
-										 aria-valuemax="100"
-										 style="width: <?php echo $progress; ?>%"></div>
+					<div class="imgs">
+						<?php foreach ($pendingPictures as $picture)
+						{ ?>
+							<?php $progress = (int)(100.0 * $picture->status / 40); ?>
+							<div class="p-img" id="image-<?php echo Html::encode($picture->id); ?>">
+								<p class="text-center"><img src="/images/<?php echo $picture->source; ?>" alt=""/></p>
+
+								<div class="row">
+									<div class="col-xs-6 col-xs-offset-3">
+										<div class="progress">
+											<div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="<?php echo $progress; ?>" aria-valuemin="0"
+												 aria-valuemax="100"
+												 style="width: <?php echo $progress; ?>%"></div>
+										</div>
+									</div>
 								</div>
 							</div>
-						</div>
-					<?php } ?>
+						<?php } ?>
+					</div>
 					<p class="text-center">Images will be shown <a href="/gallery/index"><b>here</b></a> when it will be ready.</p>
 				<?php endif; ?>
 			</div>
 		</div>
 	</div>
 </div>
+<script type="text/template" id="image-template">
+	<div class="p-img" id="image-__ID__" style="display: none">
+		<p class="text-center"><img src="__SRC__" alt=""/></p>
+
+		<div class="row">
+			<div class="col-xs-6 col-xs-offset-3">
+				<div class="progress">
+					<div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="__PROGRESS__" aria-valuemin="0"
+						 aria-valuemax="100"
+						 style="width: __PROGRESS__%"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</script>
+<?php
+$script = <<<JS
+	$(function () {
+		var updateImages = function () {
+			$.ajax({
+				url:      '/status',
+				dataType: 'text',
+				method:   'GET',
+				success:  function (data) {
+					var response = [];
+					try {
+						response = JSON.parse(data);
+					} catch (e) {
+						console.log("Cannot parse json", e);
+					}
+					var childs = $('.imgs').children(".p-img");
+					for (var i = 0; i < childs.length; i++) {
+						var id = $(childs[i]).attr('id').replace("image-", "");
+						var alive = false;
+						for (var j = 0; j < response.length; j++) {
+							if (response[j].id == parseInt(id)) {
+								alive = true;
+								break;
+							}
+						}
+						if (!alive) {
+							console.log("Img #" + id + " is ready");
+							$(childs[i]).fadeOut(400, function () {
+								$(this).remove();
+							});
+						}
+					}
+					for (var i = 0; i < response.length; i++) {
+						var imgDiv = $("#image-" + response[i].id);
+						if (imgDiv.length == 0) {
+							console.log("New img #" + response[i].id);
+							var template = $("#image-template").html();
+							template = template.replace(/__ID__/g, response[i].id);
+							template = template.replace(/__SRC__/g, response[i].source);
+							template = template.replace(/__PROGRESS__/g, response[i].progress);
+							$(".imgs").append(template);
+							$("#image-" + response[i].id).fadeIn();
+						} else {
+							imgDiv.find(".progress-bar").width(response[i].progress + "%");
+							//console.log("Img #" + response[i].id + ": progress " + response[i].progress);
+						}
+					}
+				}
+			});
+		};
+		setInterval(updateImages, 10000);
+	});
+JS;
+$this->registerJs($script);
+
+?>

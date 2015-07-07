@@ -149,4 +149,20 @@ class SiteController extends Controller
 		}
 		echo 'done.';
 	}
+
+	public function actionStatus()
+	{
+		$pendingPictures = Picture::find()->where(['state' => 'pending'])->orderBy('id ASC')->all();
+		$response        = [];
+		foreach ($pendingPictures as $pic)
+		{
+			$progress   = (int)(100.0 * $pic->status / 40);
+			$response[] = [
+				'id'       => $pic->id,
+				'source'   => '/images/'. $pic->source,
+				'progress' => $progress,
+			];
+		}
+		echo json_encode($response);
+	}
 }
