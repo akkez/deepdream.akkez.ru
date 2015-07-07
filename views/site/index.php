@@ -77,14 +77,14 @@ $script = <<<JS
 				dataType: 'text',
 				method:   'GET',
 				success:  function (data) {
-					var data = {};
+					var answer = {};
 					try {
-						data = JSON.parse(data);
+						answer = JSON.parse(data);
 					} catch (e) {
 						console.log("Cannot parse json", e);
 					}
-					var response = data.images;
-					$("#queueLength").text(data.queue);
+					var response = answer.images;
+					$("#queueLength").text(answer.queue);
 					var childs = $('.imgs').children(".p-img");
 					for (var i = 0; i < childs.length; i++) {
 						var id = $(childs[i]).attr('id').replace("image-", "");
