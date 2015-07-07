@@ -35,7 +35,7 @@ class SiteController extends Controller
 
 	public function actionUpload()
 	{
-		$lastPictures   = Picture::find()->where(['state' => 'ready'])->limit(15)->all();
+		$lastPictures   = Picture::find()->where(['state' => 'ready'])->orderBy('updated ASC')->limit(15)->all();
 		$avgPictureTime = 0;
 		if (count($lastPictures) > 1)
 		{
