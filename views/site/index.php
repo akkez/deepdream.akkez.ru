@@ -23,14 +23,24 @@ $this->title = 'DeepDream';
 				<p class="text-center"><a class="btn btn-info" href="/upload">Upload image</a></p>
 				<br/>
 
-				<?php if ($lastPicture !== null): ?>
-					<?php $progress = (int)(100.0 * $lastPicture->status / 40); ?>
-					<p class="text-center">This image is now processing: <br/><img src="/images/<?php echo $lastPicture->source; ?>" alt=""/></p>
-					<div class="progress">
-						<div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="<?php echo $progress; ?>" aria-valuemin="0" aria-valuemax="100"
-							 style="width: <?php echo $progress; ?>%"></div>
-					</div>
-					<p class="text-center">Image will be shown <a href="/gallery/index"><b>here</b></a> when it will be ready.</p>
+
+				<?php if (count($pendingPictures) > 0): ?>
+					<p class="text-center">These images are now processing: </p>
+					<?php foreach ($pendingPictures as $picture)
+					{ ?>
+						<?php $progress = (int)(100.0 * $picture->status / 40); ?>
+						<p class="text-center"><img src="/images/<?php echo $picture->source; ?>" alt=""/></p>
+						<div class="row">
+							<div class="col-xs-6 col-xs-offset-3">
+								<div class="progress">
+									<div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="<?php echo $progress; ?>" aria-valuemin="0"
+										 aria-valuemax="100"
+										 style="width: <?php echo $progress; ?>%"></div>
+								</div>
+							</div>
+						</div>
+					<?php } ?>
+					<p class="text-center">Images will be shown <a href="/gallery/index"><b>here</b></a> when it will be ready.</p>
 				<?php endif; ?>
 			</div>
 		</div>
