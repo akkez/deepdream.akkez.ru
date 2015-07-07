@@ -88,7 +88,7 @@ echo GridView::widget([
 			{
 				$pos = intval($row->id - $lastPendingId);
 
-				return Helper::formatHourAndMin(($pos + 1) * $avgPictureTime);
+				return '~' . Helper::formatHourAndMin(($pos + 1) * $avgPictureTime);
 			}
 		],
 	],
