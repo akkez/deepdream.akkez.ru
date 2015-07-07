@@ -18,7 +18,7 @@ class GalleryController extends Controller
 	{
 		$query                = Picture::find()->where(['state' => 'ready']);
 		$countQuery           = clone $query;
-		$pages                = new Pagination(['totalCount' => $countQuery->count(), 'pageSize' => 100]);
+		$pages                = new Pagination(['totalCount' => $countQuery->count(), 'pageSize' => 50]);
 		$pages->pageSizeParam = false;
 		$pictures             = $query->offset($pages->offset)->limit($pages->limit)->orderBy('id desc')->all();
 
@@ -32,7 +32,7 @@ class GalleryController extends Controller
 	{
 		$query                = Picture::find()->where(['state' => 'new']);
 		$countQuery           = clone $query;
-		$pages                = new Pagination(['totalCount' => $countQuery->count(), 'pageSize' => 100]);
+		$pages                = new Pagination(['totalCount' => $countQuery->count(), 'pageSize' => 50]);
 		$pages->pageSizeParam = false;
 		$pictures             = $query->offset($pages->offset)->limit($pages->limit)->orderBy('id asc')->all();
 
