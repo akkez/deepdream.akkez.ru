@@ -91,4 +91,4 @@ echo GridView::widget([
 			}
 		],
 	],
-]) ?>
+]) ?><!-- apt <?php echo $avgPictureTime; ?> rt <?php echo $readyTime; ?> -->
