@@ -32,4 +32,12 @@ class Helper
 		);
 	}
 
+	public static function formatHourAndMin($seconds)
+	{
+		$hours   = floor($seconds / 3600);
+		$minutes = floor(($seconds - $hours * 3600) / 60);
+
+		return $hours . ' hours ' . $minutes . ' minutes';
+	}
+
 }

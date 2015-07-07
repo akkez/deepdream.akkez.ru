@@ -1,19 +1,32 @@
 <?php
+use yii\grid\GridView;
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
+use \app\helpers\Helper;
 
 /* @var $this yii\web\View */
 /* @var $form yii\bootstrap\ActiveForm */
 /* @var $model app\models\LoginForm */
 
+/* @var int $readyTime */
+/* @var int $avgPictureTime */
+/* @var \yii\data\ActiveDataProvider $myPictureDP */
+/* @var int $lastPendingId */
+
 $this->title = 'Upload';
+
+
 ?>
 	<h1><?= Html::encode($this->title) ?></h1>
 
+	<div class="alert alert-info">
+		Your picture will be ready after <b>~<?php echo Helper::formatHourAndMin($readyTime); ?></b>.
+	</div>
+
 <?php echo Html::errorSummary($model); ?>
 <?php $form = ActiveForm::begin([
-	'id' => 'login-form',
-	'options'     => ['enctype' => "multipart/form-data"],
+	'id'      => 'login-form',
+	'options' => ['enctype' => "multipart/form-data"],
 	/*'fieldConfig' => [
 		'template'     => "{label}\n<div class=\"col-lg-3\">{input}</div>\n<div class=\"col-lg-8\">{error}</div>",
 		'labelOptions' => ['class' => 'col-lg-1 control-label'],
@@ -33,3 +46,49 @@ $this->title = 'Upload';
 	</div>
 
 <?php ActiveForm::end(); ?>
+
+	<h2>My images</h2>
+<?php
+
+echo GridView::widget([
+	'dataProvider' => $myPictureDP,
+	'columns'      => [
+		[
+			'header' => 'Image',
+			'format' => 'raw',
+			'value'  => function ($row)
+			{
+				return Html::img('/images/' . $row->source, ['style' => 'max-width: 300px; max-height: 300px']);
+			}
+		],
+		[
+			'header' => 'Position in queue',
+			'format' => 'text',
+			'value'  => function ($row) use ($lastPendingId)
+			{
+				$pos = intval($row->id - $lastPendingId);
+
+				if ($pos == 1)
+				{
+					return '1st';
+				}
+				if ($pos == 2)
+				{
+					return '2nd';
+				}
+
+				return $pos . 'th';
+			}
+		],
+		[
+			'header' => 'Time before complete',
+			'format' => 'text',
+			'value'  => function ($row) use ($lastPendingId, $avgPictureTime)
+			{
+				$pos = intval($row->id - $lastPendingId);
+
+				return Helper::formatHourAndMin(($pos + 1) * $avgPictureTime);
+			}
+		],
+	],
+]) ?>

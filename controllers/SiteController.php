@@ -5,6 +5,7 @@ namespace app\controllers;
 use app\helpers\Helper;
 use app\models\Picture;
 use Yii;
+use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use app\models\UploadForm;
 use yii\web\HttpException;
@@ -34,6 +35,35 @@ class SiteController extends Controller
 
 	public function actionUpload()
 	{
+		$lastPictures   = Picture::find()->where(['state' => 'ready'])->limit(15)->all();
+		$avgPictureTime = 0;
+		if (count($lastPictures) > 1)
+		{
+			$summ = 0;
+			for ($i = 1; $i < count($lastPictures); $i++)
+			{
+				$diff = strtotime($lastPictures[$i]->updated) - strtotime($lastPictures[$i - 1]->updated);
+				$summ += $diff;
+			}
+			$avgPictureTime = intval($summ / (count($lastPictures) - 1));
+		}
+		$readyTime   = $avgPictureTime * Picture::find()->where(['state' => 'new'])->count();
+		$myPictureDP = new ActiveDataProvider([
+			'query' => Picture::find()->where(['state' => 'new', 'ip' => Yii::$app->getRequest()->getUserIP()]),
+			'sort'  => false,
+		]);
+		$lastPending = Picture::find()->where(['state' => 'pending'])->orderBy('id DESC')->one();
+		if ($lastPending == null)
+		{
+			$lastPending = Picture::find()->where(['state' => 'ready'])->orderBy('id DESC')->one();
+		}
+		$viewData = [
+			'readyTime'      => $readyTime,
+			'myPictureDP'    => $myPictureDP,
+			'avgPictureTime' => $avgPictureTime,
+			'lastPendingId'  => $lastPending->id,
+		];
+
 		$model = new UploadForm();
 		if ($model->load(Yii::$app->request->post()))
 		{
@@ -79,9 +109,9 @@ class SiteController extends Controller
 					$model->addError('image', 'Sorry, image that you requested are ALREADY in queue. Please wait and/or look into gallery. Thank you!');
 					unlink($filename);
 
-					return $this->render('upload', [
-						'model' => $model
-					]);
+					$viewData['model'] = $model;
+
+					return $this->render('upload', $viewData);
 				}
 
 				$picture         = new Picture();
@@ -100,9 +130,9 @@ class SiteController extends Controller
 			}
 		}
 
-		return $this->render('upload', [
-			'model' => $model
-		]);
+		$viewData['model'] = $model;
+
+		return $this->render('upload', $viewData);
 	}
 
 	public function actionAbout()
@@ -152,17 +182,20 @@ class SiteController extends Controller
 
 	public function actionStatus()
 	{
-		$pendingPictures = Picture::find()->where(['state' => 'pending'])->orderBy('id ASC')->all();
-		$response        = [];
+		$pendingImageCount = Picture::find()->where(['state' => 'new'])->count();
+		$pendingPictures   = Picture::find()->where(['state' => 'pending'])->orderBy('id ASC')->all();
+
+		$response = [];
 		foreach ($pendingPictures as $pic)
 		{
 			$progress   = (int)(100.0 * $pic->status / 40);
 			$response[] = [
 				'id'       => $pic->id,
-				'source'   => '/images/'. $pic->source,
+				'source'   => '/images/' . $pic->source,
 				'progress' => $progress,
 			];
 		}
-		echo json_encode($response);
+
+		echo json_encode(['images' => $response, 'queue' => $pendingImageCount]);
 	}
 }
