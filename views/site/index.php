@@ -20,7 +20,7 @@ $this->title = 'DeepDream';
 				<?php if ($pendingImageCount == 0): ?>
 					<p class="text-center"><b>Queue is empty.</b></p>
 				<?php else: ?>
-					<p class="text-center" style="font-size: 18px"><b><?php echo $pendingImageCount; ?></b> images in queue</p>
+					<p class="text-center" style="font-size: 18px"><b id="queueLength"><?php echo $pendingImageCount; ?></b> images in queue</p>
 				<?php endif; ?>
 				<p class="text-center"><a class="btn btn-info" href="/upload">Upload image</a></p>
 				<br/>
@@ -77,12 +77,14 @@ $script = <<<JS
 				dataType: 'text',
 				method:   'GET',
 				success:  function (data) {
-					var response = [];
+					var data = {};
 					try {
-						response = JSON.parse(data);
+						data = JSON.parse(data);
 					} catch (e) {
 						console.log("Cannot parse json", e);
 					}
+					var response = data.images;
+					$("#queueLength").text(data.queue);
 					var childs = $('.imgs').children(".p-img");
 					for (var i = 0; i < childs.length; i++) {
 						var id = $(childs[i]).attr('id').replace("image-", "");
