@@ -58,11 +58,13 @@ class SiteController extends Controller
 		{
 			$lastPending = Picture::find()->where(['state' => 'ready'])->orderBy('id DESC')->one();
 		}
+		$pendingPicsCount = Picture::find()->where(['state' => 'new'])->count();
 		$viewData = [
-			'readyTime'      => $readyTime,
-			'myPictureDP'    => $myPictureDP,
-			'avgPictureTime' => $avgPictureTime,
-			'lastPendingId'  => $lastPending->id,
+			'readyTime'        => $readyTime,
+			'myPictureDP'      => $myPictureDP,
+			'avgPictureTime'   => $avgPictureTime,
+			'lastPendingId'    => $lastPending->id,
+			'pendingPicsCount' => $pendingPicsCount,
 		];
 
 		$model = new UploadForm();

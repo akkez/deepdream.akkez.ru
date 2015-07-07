@@ -12,16 +12,17 @@ use \app\helpers\Helper;
 /* @var int $avgPictureTime */
 /* @var \yii\data\ActiveDataProvider $myPictureDP */
 /* @var int $lastPendingId */
+/* @var int $pendingPicsCount */
 
 $this->title = 'Upload';
 
 
 ?>
-	<h1><?= Html::encode($this->title) ?></h1>
+<h1><?= Html::encode($this->title) ?></h1>
 
-	<div class="alert alert-info">
-		Your picture will be ready after <b>~<?php echo Helper::formatHourAndMin($readyTime); ?></b>.
-	</div>
+<div class="alert alert-info">
+	Your picture will be ready after <b>~<?php echo Helper::formatHourAndMin($readyTime); ?></b>.
+</div>
 
 <?php echo Html::errorSummary($model); ?>
 <?php $form = ActiveForm::begin([
@@ -33,21 +34,21 @@ $this->title = 'Upload';
 	],*/
 ]); ?>
 
-	<div class="form-group">
-		<?= $form->field($model, 'email')->textInput() ?>
-		<span class="help-block">Image will be sent on this email after processing.</span>
-	</div>
-	<div class="form-group">
-		<?= $form->field($model, 'image')->fileInput() ?>
-	</div>
+<div class="form-group">
+	<?= $form->field($model, 'email')->textInput() ?>
+	<span class="help-block">Image will be sent on this email after processing.</span>
+</div>
+<div class="form-group">
+	<?= $form->field($model, 'image')->fileInput() ?>
+</div>
 
-	<div class="form-group">
-		<?= Html::submitButton('Submit', ['class' => 'btn btn-primary']) ?>
-	</div>
+<div class="form-group">
+	<?= Html::submitButton('Submit', ['class' => 'btn btn-primary']) ?>
+</div>
 
 <?php ActiveForm::end(); ?>
 
-	<h2>My images</h2>
+<h2>My images</h2>
 <?php
 
 echo GridView::widget([
@@ -64,20 +65,20 @@ echo GridView::widget([
 		[
 			'header' => 'Position in queue',
 			'format' => 'text',
-			'value'  => function ($row) use ($lastPendingId)
+			'value'  => function ($row) use ($lastPendingId, $pendingPicsCount)
 			{
 				$pos = intval($row->id - $lastPendingId);
 
 				if ($pos == 1)
 				{
-					return '1st';
+					return '1st / ' . $pendingPicsCount;
 				}
 				if ($pos == 2)
 				{
-					return '2nd';
+					return '2nd / ' . $pendingPicsCount;
 				}
 
-				return $pos . 'th';
+				return $pos . 'th / ' . $pendingPicsCount;
 			}
 		],
 		[
