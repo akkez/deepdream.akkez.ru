@@ -33,7 +33,7 @@ $this->title = 'DeepDream';
 				</a>
 			</div>
 			<?php $i++;
-			if ($i == 4 || $i == 8) { ?></div>
+			if ($i % 4 == 0 && $i < 24) { ?></div>
 		<div class="row"><?php } ?>
 			<?php } ?>
 		</div>

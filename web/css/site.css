@@ -91,5 +91,6 @@ a.desc:after {
 }
 
 .img-box img {
-  max-width: 270px;
+  max-width: 280px;
+  margin-bottom: 20px;
 }
