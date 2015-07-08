@@ -2,7 +2,7 @@
 /* @var $this yii\web\View */
 use yii\helpers\Html;
 
-$this->title = 'DeepDream';
+$this->title = 'DeepDream online';
 ?>
 <div class="site-index">
 
