@@ -58,13 +58,13 @@ $this->title = 'DeepDream online';
 							<?php foreach ($pendingPictures as $picture)
 							{ ?>
 								<?php $progress = (int)(100.0 * $picture->status / 40); ?>
-								<div class="col-md-3">
-									<div class="p-img" id="image-<?php echo Html::encode($picture->id); ?>">
+								<div class="col-md-3 p-img" id="image-<?php echo Html::encode($picture->id); ?>">
+									<div>
 										<p class="text-center"><a href="/picture/<?php echo $picture->id; ?>"><img style="max-width: 100%" src="/images/<?php echo $picture->source; ?>" alt=""/></a>
 										</p>
 
 										<div class="row">
-											<div class="col-xs-6 col-xs-offset-3">
+											<div class="col-xs-10 col-xs-offset-1">
 												<div class="progress">
 													<div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="<?php echo $progress; ?>"
 														 aria-valuemin="0"
@@ -85,12 +85,12 @@ $this->title = 'DeepDream online';
 	</div>
 </div>
 <script type="text/template" id="image-template">
-	<div class="col-md-3">
-		<div class="p-img" id="image-__ID__" style="display: none">
+	<div class="col-md-3 p-img" id="image-__ID__" style="display: none">
+		<div>
 			<p class="text-center"><a href="/picture/__ID__"><img style="max-width: 100%" src="__SRC__" alt=""/></a></p>
 
 			<div class="row">
-				<div class="col-xs-6 col-xs-offset-3">
+				<div class="col-xs-10 col-xs-offset-1">
 					<div class="progress">
 						<div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="__PROGRESS__" aria-valuemin="0"
 							 aria-valuemax="100"
