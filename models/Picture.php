@@ -15,6 +15,8 @@ use Yii;
  * @property string $output
  * @property string $hash
  * @property integer $status
+ * @property string $algorithm
+ * @property integer $algorithmId
  */
 class Picture extends \yii\db\ActiveRecord
 {

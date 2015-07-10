@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\helpers\Helper;
+use app\models\Algorithm;
 use app\models\Picture;
 use Yii;
 use yii\data\ActiveDataProvider;
@@ -26,12 +27,12 @@ class SiteController extends Controller
 	{
 		$pendingImageCount = Picture::find()->where(['state' => 'new'])->count();
 		$pendingPictures   = Picture::find()->where(['state' => 'pending'])->orderBy('id ASC')->all();
-		$lastReady = Picture::find()->where(['state' => 'ready'])->orderBy('id DESC')->limit(24)->all();
+		$lastReady         = Picture::find()->where(['state' => 'ready'])->orderBy('id DESC')->limit(24)->all();
 
 		return $this->render('index', [
 			'pendingImageCount' => $pendingImageCount,
 			'pendingPictures'   => $pendingPictures,
-			'lastPictures' => $lastReady,
+			'lastPictures'      => $lastReady,
 		]);
 	}
 
@@ -61,12 +62,27 @@ class SiteController extends Controller
 			$lastPending = Picture::find()->where(['state' => 'ready'])->orderBy('id DESC')->one();
 		}
 		$pendingPicsCount = Picture::find()->where(['state' => 'new'])->count();
+		$algorithms       = [];
+		$algos            = Algorithm::find()->orderBy('count DESC')->all();
+		foreach ($algos as $algo)
+		{
+			if (count($algorithms) == 0)
+			{
+				$algorithms[$algo->getPrimaryKey()] = $algo->name . ' (default, ' . $algo->count . ' pics)';
+			}
+			else
+			{
+				$algorithms[$algo->getPrimaryKey()] = $algo->name . ' (' . $algo->count . ' pics)';
+			}
+		}
 		$viewData = [
 			'readyTime'        => $readyTime,
 			'myPictureDP'      => $myPictureDP,
 			'avgPictureTime'   => $avgPictureTime,
 			'lastPendingId'    => $lastPending->id,
 			'pendingPicsCount' => $pendingPicsCount,
+			'algorithms'       => $algorithms,
+			'algos'            => $algos,
 		];
 
 		$model = new UploadForm();
@@ -118,18 +134,24 @@ class SiteController extends Controller
 
 					return $this->render('upload', $viewData);
 				}
+				$algo = Algorithm::find()->where(['id' => $model->algoId])->one();
 
-				$picture         = new Picture();
-				$picture->email  = $model->email;
-				$picture->ip     = \Yii::$app->getRequest()->getUserIP();
-				$picture->source = $srcName;
-				$picture->output = null;
-				$picture->state  = 'new';
-				$picture->hash   = $hash;
-				$picture->status = 0;
+				$picture              = new Picture();
+				$picture->email       = $model->email;
+				$picture->ip          = \Yii::$app->getRequest()->getUserIP();
+				$picture->source      = $srcName;
+				$picture->output      = null;
+				$picture->state       = 'new';
+				$picture->hash        = $hash;
+				$picture->status      = 0;
+				$picture->algorithm   = $algo->name;
+				$picture->algorithmId = $model->algoId;
 				$picture->save();
 
-				\Yii::$app->getSession()->setFlash('success', 'Your image were successfully uploaded. Converted image will be ready after ~'. Helper::formatHourAndMin($readyTime). ' and sent on your email. Thank you!');
+				$algo->count += 1;
+				$algo->save();
+
+				\Yii::$app->getSession()->setFlash('success', 'Your image were successfully uploaded. Converted image will be ready after ~' . Helper::formatHourAndMin($readyTime) . ' and sent on your email. Thank you!');
 
 				return $this->redirect('/');
 			}

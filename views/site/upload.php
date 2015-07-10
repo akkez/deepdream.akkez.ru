@@ -18,11 +18,11 @@ $this->title = 'Upload';
 
 
 ?>
-<h1><?= Html::encode($this->title) ?></h1>
+	<h1><?= Html::encode($this->title) ?></h1>
 
-<div class="alert alert-info">
-	Your picture will be ready after <b>~<?php echo Helper::formatHourAndMin($readyTime); ?></b>.
-</div>
+	<div class="alert alert-info">
+		Your picture will be ready after <b>~<?php echo Helper::formatHourAndMin($readyTime); ?></b>.
+	</div>
 
 <?php echo Html::errorSummary($model); ?>
 <?php $form = ActiveForm::begin([
@@ -34,21 +34,50 @@ $this->title = 'Upload';
 	],*/
 ]); ?>
 
-<div class="form-group">
-	<?= $form->field($model, 'email')->textInput() ?>
-	<span class="help-block">Image will be sent on this email after processing.</span>
-</div>
-<div class="form-group">
-	<?= $form->field($model, 'image')->fileInput() ?>
-</div>
+	<div class="form-group">
+		<?= $form->field($model, 'email')->textInput() ?>
+		<span class="help-block">Image will be sent on this email after processing.</span>
+	</div>
+	<div class="form-group">
+		<?= $form->field($model, 'image')->fileInput() ?>
+	</div>
 
-<div class="form-group">
-	<?= Html::submitButton('Submit', ['class' => 'btn btn-primary']) ?>
-</div>
+	<div class="form-group">
+		<?= $form->field($model, 'algoId')->dropDownList($algorithms) ?>
+		<div class="panel panel-info">
+			<div class="panel-heading">
+				<h3 class="panel-title"><a data-toggle="collapse" data-target="#collapseExamples" href="#collapseExamples" onclick="return false;">Show examples</a></h3>
+			</div>
+			<div id="collapseExamples" class="panel-collapse collapse">
+				<div class="panel-body">
+					<ul>
+						<li>Click on image to choose him. (<a href="/yarik/default.jpg" target="_blank">source image</a>)</li>
+					</ul>
+					<div class="row">
+						<?php /* @var \app\models\Algorithm[] $algos */
+						foreach ($algos as $algorithm)
+						{
+							$first = $algorithm->getPrimaryKey() == $algos[0]->getPrimaryKey();
+							?>
+						<div class="col-md-3 pic-algo pic-algo-<?= $algorithm->id; ?>">
+							<a onclick="chooseYarik(<?= $algorithm->id; ?>); return false;" target="_blank">
+								<img src="/yarik/<?= str_replace('/', '-', $algorithm->name) ?>.png" style="max-width: 85%; margin: 10px 0 0 20px; cursor: pointer; <?php if ($first): ?>border: 2px solid red;<?php endif; ?>"/>
+							</a><br/><p class="text-center"><?= Html::encode($algorithm->name); ?></p></div><?php
+						} ?>
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<?= Html::submitButton('Submit', ['class' => 'btn btn-primary']) ?>
+	</div>
 
 <?php ActiveForm::end(); ?>
 
-<h2>My images</h2>
+	<h2>My images</h2>
 <?php
 
 echo GridView::widget([
@@ -93,3 +122,17 @@ echo GridView::widget([
 		],
 	],
 ]) ?><!-- apt <?php echo $avgPictureTime; ?> rt <?php echo $readyTime; ?> -->
+
+<?php $script = <<<JS
+	var chooseYarik = function (a) {
+		$("#uploadform-algoid").val(a);
+		$(".pic-algo img").css('border', 'none');
+		$(".pic-algo-" + a + " img").css('border', '2px solid red');
+		//$("#uploadform-algoid >option[value='" + a + "']").attr('selected', true);
+	}
+	$("#uploadform-algoid").change(function () {
+		$(".pic-algo img").css('border', 'none');
+		$(".pic-algo-" + this.value + " img").css('border', '2px solid red');
+    });
+JS;
+$this->registerJs($script, $this::POS_END);

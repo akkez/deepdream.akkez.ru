@@ -13,19 +13,22 @@ class UploadForm extends Model
 {
 	public $email;
 	public $image;
+	public $algoId;
 
 	public function rules()
 	{
 		return [
 			[['email'], 'required'],
 			['email', 'email'],
-			['image', 'file', 'skipOnEmpty' => false, 'mimeTypes' => 'image/png, image/jpeg']
+			['image', 'file', 'skipOnEmpty' => false, 'mimeTypes' => 'image/png, image/jpeg'],
+			['algoId', 'required'],
+			['algoId', 'exist', 'targetClass' => '\app\models\Algorithm', 'targetAttribute' => 'id'],
 		];
 	}
 
 	public function attributeLabels()
 	{
-		return ['email' => 'Email', 'image' => 'Your image'];
+		return ['email' => 'Email', 'image' => 'Your image', 'algoId' => 'Choose algorithm'];
 	}
 
 	public function check()
