@@ -51,7 +51,7 @@ $this->title = 'Upload';
 			<div id="collapseExamples" class="panel-collapse collapse">
 				<div class="panel-body">
 					<ul>
-						<li>Click on image to choose him. (<a href="/yarik/default.jpg" target="_blank">source image</a>)</li>
+						<li>Click on image to choose it. (<a href="/yarik/default.jpg" target="_blank">source image</a>)</li>
 					</ul>
 					<div class="row">
 						<?php /* @var \app\models\Algorithm[] $algos */
