@@ -18,7 +18,10 @@ $this->title = 'Queue';
 	{
 		$color = 'background-color: #aaf';
 	}
-	echo Html::img('/images/' . $picture->source, ['style' => 'padding: 15px; ' . $color]);
+	?>
+	<div class="text-center"><?php
+	echo Html::a(Html::img('/images/' . $picture->source, ['style' => 'padding: 15px; ' . $color]), '/picture/' . $picture->id);
+	?></div><?php
 } ?>
 <?php if (count($pictures) == 0)
 {
@@ -27,11 +30,13 @@ $this->title = 'Queue';
 
 <div class="row">
 	<div class="col-md-12">
-		<?php
-		echo LinkPager::widget([
-			'pagination'       => $paginator,
-			'registerLinkTags' => true
-		]);
-		?>
+		<div class="text-center">
+			<?php
+			echo LinkPager::widget([
+				'pagination'       => $paginator,
+				'registerLinkTags' => true
+			]);
+			?>
+		</div>
 	</div>
 </div>

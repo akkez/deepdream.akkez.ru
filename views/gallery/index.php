@@ -10,7 +10,6 @@ use yii\widgets\LinkPager;
 $this->title = 'Gallery';
 ?>
 <h1><?= Html::encode($this->title) ?></h1>
-<p><a href="/gallery/queue">View queue</a></p>
 
 <?php foreach ($pictures as $picture)
 {
@@ -19,7 +18,10 @@ $this->title = 'Gallery';
 	{
 		$color = 'background-color: #aaf';
 	}
-	echo Html::a(Html::img('/ready/' . $picture->output, ['style' => 'padding: 15px; cursor: pointer; ' . $color, 'title' => 'Click to view source']), '/images/' . $picture->source);
+	?>
+	<div class="text-center"><?php
+	echo Html::a(Html::img('/ready/' . $picture->output, ['style' => 'padding: 15px; cursor: pointer; ' . $color]), '/picture/' . $picture->id);
+	?></div><?php
 } ?>
 <?php if (count($pictures) == 0)
 {
@@ -28,11 +30,12 @@ $this->title = 'Gallery';
 
 <div class="row">
 	<div class="col-md-12">
-		<?php
-		echo LinkPager::widget([
-			'pagination'       => $paginator,
-			'registerLinkTags' => true
-		]);
-		?>
+		<div class="text-center">
+			<?php
+			echo LinkPager::widget([
+				'pagination'       => $paginator,
+				'registerLinkTags' => true
+			]);
+			?></div>
 	</div>
 </div>

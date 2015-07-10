@@ -19,6 +19,7 @@ $config = [
 			'rules'           => [
 				''         => 'site/index',
 				'<action>' => 'site/<action>',
+				'<controller>/<id:\d+>' => '<controller>/view',
 			],
 		],
 		'cache'        => [

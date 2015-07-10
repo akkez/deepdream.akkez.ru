@@ -61,8 +61,11 @@ $this->title = 'Upload';
 							?>
 						<div class="col-md-3 pic-algo pic-algo-<?= $algorithm->id; ?>">
 							<a onclick="chooseYarik(<?= $algorithm->id; ?>); return false;" target="_blank">
-								<img src="/yarik/<?= str_replace('/', '-', $algorithm->name) ?>.jpg" style="max-width: 85%; margin: 10px 0 0 20px; cursor: pointer; <?php if ($first): ?>border: 2px solid red;<?php endif; ?>"/>
-							</a><br/><p class="text-center"><?= Html::encode($algorithm->name); ?></p></div><?php
+								<img src="/yarik/<?= str_replace('/', '-', $algorithm->name) ?>.jpg"
+									 style="max-width: 85%; margin: 10px 0 0 20px; cursor: pointer; <?php if ($first): ?>border: 2px solid red;<?php endif; ?>"/>
+							</a><br/>
+
+							<p class="text-center"><?= Html::encode($algorithm->name); ?></p></div><?php
 						} ?>
 
 					</div>
@@ -88,7 +91,7 @@ echo GridView::widget([
 			'format' => 'raw',
 			'value'  => function ($row)
 			{
-				return Html::img('/images/' . $row->source, ['style' => 'max-width: 300px; max-height: 300px']);
+				return Html::a(Html::img('/images/' . $row->source, ['style' => 'max-width: 300px; max-height: 300px']), '/picture/' . $row->id);
 			}
 		],
 		'algorithm:text:Output layer',
