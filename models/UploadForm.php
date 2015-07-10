@@ -28,7 +28,7 @@ class UploadForm extends Model
 
 	public function attributeLabels()
 	{
-		return ['email' => 'Email', 'image' => 'Your image', 'algoId' => 'Choose algorithm'];
+		return ['email' => 'Email', 'image' => 'Your image', 'algoId' => 'Choose output layer'];
 	}
 
 	public function check()

@@ -91,7 +91,7 @@ echo GridView::widget([
 				return Html::img('/images/' . $row->source, ['style' => 'max-width: 300px; max-height: 300px']);
 			}
 		],
-		'algorithm:text:Algorithm',
+		'algorithm:text:Output layer',
 		[
 			'header' => 'Position in queue',
 			'format' => 'text',
@@ -129,8 +129,7 @@ echo GridView::widget([
 		$("#uploadform-algoid").val(a);
 		$(".pic-algo img").css('border', 'none');
 		$(".pic-algo-" + a + " img").css('border', '2px solid red');
-		//$("#uploadform-algoid >option[value='" + a + "']").attr('selected', true);
-	}
+	};
 	$("#uploadform-algoid").change(function () {
 		$(".pic-algo img").css('border', 'none');
 		$(".pic-algo-" + this.value + " img").css('border', '2px solid red');
