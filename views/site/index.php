@@ -53,30 +53,28 @@ $this->title = 'DeepDream online';
 
 				<?php if (count($pendingPictures) > 0): ?>
 					<p class="text-center">These images are now processing: </p>
-					<div class="imgs">
-						<div class="row">
-							<?php foreach ($pendingPictures as $picture)
-							{ ?>
-								<?php $progress = (int)(100.0 * $picture->status / 40); ?>
-								<div class="col-md-3 p-img" id="image-<?php echo Html::encode($picture->id); ?>">
-									<div>
-										<p class="text-center"><a href="/picture/<?php echo $picture->id; ?>"><img style="max-width: 100%" src="/images/<?php echo $picture->source; ?>" alt=""/></a>
-										</p>
+					<div class="imgs row">
+						<?php foreach ($pendingPictures as $picture)
+						{ ?>
+							<?php $progress = (int)(100.0 * $picture->status / 40); ?>
+							<div class="col-md-3 p-img" id="image-<?php echo Html::encode($picture->id); ?>">
+								<div>
+									<p class="text-center"><a href="/picture/<?php echo $picture->id; ?>"><img style="max-width: 100%" src="/images/<?php echo $picture->source; ?>" alt=""/></a>
+									</p>
 
-										<div class="row">
-											<div class="col-xs-10 col-xs-offset-1">
-												<div class="progress">
-													<div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="<?php echo $progress; ?>"
-														 aria-valuemin="0"
-														 aria-valuemax="100"
-														 style="width: <?php echo $progress; ?>%"></div>
-												</div>
+									<div class="row">
+										<div class="col-xs-10 col-xs-offset-1">
+											<div class="progress">
+												<div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="<?php echo $progress; ?>"
+													 aria-valuemin="0"
+													 aria-valuemax="100"
+													 style="width: <?php echo $progress; ?>%"></div>
 											</div>
 										</div>
 									</div>
 								</div>
-							<?php } ?>
-						</div>
+							</div>
+						<?php } ?>
 					</div>
 					<p class="text-center">Images will be shown <a href="/gallery/index"><b>here</b></a> when it will be ready.</p>
 				<?php endif; ?>
