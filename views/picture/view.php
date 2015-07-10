@@ -1,3 +1,4 @@
+<?php $this->title = 'Single picture'; ?>
 <h2>Picture</h2>
 <div class="row">
 	<div class="col-md-6 text-center">

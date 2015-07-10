@@ -15,7 +15,7 @@ class PictureController extends Controller
 {
 	public function actionView($id)
 	{
-		$picture = Picture::find()->where(['id' => $id])->one();
+		$picture = Picture::find()->where(['id' => $id])->andWhere(['!=', 'state', 'hidden'])->one();
 		if ($picture == null)
 		{
 			throw new HttpException(404, 'Haha');

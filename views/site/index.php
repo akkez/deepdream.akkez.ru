@@ -21,22 +21,25 @@ $this->title = 'DeepDream online';
 			<p class="text-center" style="font-size: 18px"><b id="queueLengthTop"><?php echo $pendingImageCount; ?></b> images in queue</p>
 		<?php endif; ?>
 		<br/>
+
 		<p class="text-center">Last pictures:</p>
 
 		<div class="row">
-			<?php $i = 0;
-			foreach ($lastPictures as $picture) { ?>
-
 			<div class="col-md-3 text-center img-box">
-				<a href="/ready/<?php echo $picture->output; ?>">
-					<img src="/ready/<?php echo $picture->output; ?>" alt=""/>
-				</a>
+				<?php $i = 0;
+				foreach ($lastPictures as $picture) { ?>
+				<div>
+					<a href="/picture/<?php echo $picture->id; ?>">
+						<img src="/ready/<?php echo $picture->output; ?>" alt=""/>
+					</a>
+				</div>
+				<?php $i++;
+				if ($i % 4 == 0 && $i < 24) { ?></div>
+			<div class="col-md-3 text-center img-box"><?php } ?>
+				<?php } ?>
 			</div>
-			<?php $i++;
-			if ($i % 4 == 0 && $i < 24) { ?></div>
-		<div class="row"><?php } ?>
-			<?php } ?>
 		</div>
+
 
 		<div class="row">
 			<div class="col-md-12">
@@ -56,7 +59,7 @@ $this->title = 'DeepDream online';
 						{ ?>
 							<?php $progress = (int)(100.0 * $picture->status / 40); ?>
 							<div class="p-img" id="image-<?php echo Html::encode($picture->id); ?>">
-								<p class="text-center"><img src="/images/<?php echo $picture->source; ?>" alt=""/></p>
+								<p class="text-center"><a href="/picture/<?php echo $picture->id; ?>"><img style="max-width: 100%" src="/images/<?php echo $picture->source; ?>" alt=""/></a></p>
 
 								<div class="row">
 									<div class="col-xs-6 col-xs-offset-3">
@@ -78,7 +81,7 @@ $this->title = 'DeepDream online';
 </div>
 <script type="text/template" id="image-template">
 	<div class="p-img" id="image-__ID__" style="display: none">
-		<p class="text-center"><img src="__SRC__" alt=""/></p>
+		<p class="text-center"><a href="/picture/__ID__"><img style="max-width: 100%" src="__SRC__" alt=""/></a></p>
 
 		<div class="row">
 			<div class="col-xs-6 col-xs-offset-3">
