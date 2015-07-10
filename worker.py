@@ -125,10 +125,10 @@ while True:
             f = open(pic_id_file, "w")
             f.write(str(row['id']))
             f.close()
-			f = open(algo_file, 'w')
-			f.write(row['algorithm'])
+            f = open(algo_file, 'w')
+            f.write(row['algorithm'])
             f.close()
-			mask = row['algorithm'].replace("/", "-") + '-$1-$2.png'
+            mask = row['algorithm'].replace("/", "-") + '-$1-$2.png'
 
             proc = subprocess.Popen(handler)
             pid = proc.pid
