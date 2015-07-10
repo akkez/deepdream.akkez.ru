@@ -61,7 +61,7 @@ $this->title = 'Upload';
 							?>
 						<div class="col-md-3 pic-algo pic-algo-<?= $algorithm->id; ?>">
 							<a onclick="chooseYarik(<?= $algorithm->id; ?>); return false;" target="_blank">
-								<img src="/yarik/<?= str_replace('/', '-', $algorithm->name) ?>.png" style="max-width: 85%; margin: 10px 0 0 20px; cursor: pointer; <?php if ($first): ?>border: 2px solid red;<?php endif; ?>"/>
+								<img src="/yarik/<?= str_replace('/', '-', $algorithm->name) ?>.jpg" style="max-width: 85%; margin: 10px 0 0 20px; cursor: pointer; <?php if ($first): ?>border: 2px solid red;<?php endif; ?>"/>
 							</a><br/><p class="text-center"><?= Html::encode($algorithm->name); ?></p></div><?php
 						} ?>
 
