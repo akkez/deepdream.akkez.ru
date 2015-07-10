@@ -91,6 +91,7 @@ echo GridView::widget([
 				return Html::img('/images/' . $row->source, ['style' => 'max-width: 300px; max-height: 300px']);
 			}
 		],
+		'algorithm:text:Algorithm',
 		[
 			'header' => 'Position in queue',
 			'format' => 'text',
