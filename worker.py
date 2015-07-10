@@ -7,22 +7,28 @@ import uuid
 import oursql
 import shutil
 import requests
+from dbsettings import dbconfig
 
-connect = oursql.connect(host='127.0.0.1', user='dream', passwd=')))', db='dream')
+wid = 'id0'
+if len(sys.argv) >= 2:
+    wid = sys.argv[1]
+print "working with", wid
+
+connect = oursql.connect(host=dbconfig['host'], user=dbconfig['user'], passwd=dbconfig['password'], db=dbconfig['database'])
 cursor = connect.cursor(oursql.DictCursor)
 
-handler = ['/bin/sh', '/home/ddd/ddd/go.sh']
+handler = ['/bin/sh', '/home/dd/ddd-' + wid + '/go.sh', wid]
 pid = -1
 
 def cur_time():
         return time.strftime("[%Y.%m.%d %H:%M:%S] ")
 
 def is_running(pid):
+        process = subprocess.Popen(cmd, shell=True,
         return os.path.exists("/proc/" + str(pid))
 
 def is_really_running():
-        cmd = 'ps x | grep /home/ddd/ddd/deep | grep -v "grep"'
-        process = subprocess.Popen(cmd, shell=True,
+        cmd = 'ps x | grep /home/dd/ddd-' + wid + '/deep | grep -v "grep"'
                            stdout=subprocess.PIPE,
                            stderr=subprocess.PIPE)
         out, err = process.communicate()
@@ -38,12 +44,13 @@ def recycle_pid():
         except OSError,e:
             break
 
-src_dir = '/var/www/deepdream/web/images/'
-process_dir = '/home/ddd/ddd/out/'
-prepare_img = '/home/ddd/ddd/src.jpg'
-dest_dir = '/var/www/deepdream/web/ready/'
+src_dir = '/var/www/dream/web/images/'
+process_dir = '/home/dd/ddd-' + wid + '/out/'
+prepare_img = '/home/dd/ddd-' + wid + '/src.jpg'
+dest_dir = '/var/www/dream/web/ready/'
 mask = 'inception_4c-output-$1-$2.png'
-pic_id_file = '/home/ddd/ddd/pic.txt'
+pic_id_file = '/home/dd/ddd-' + wid + '/pic.txt'
+algo_file = '/home/dd/ddd-' + wid + '/algo.txt'
 
 ps = is_really_running()
 if len(ps) > 0:
@@ -81,7 +88,7 @@ while True:
         if row is None:
             print cur_time() + ": #" + cur_picture_id + " does not exists."
         else:
-            print cur_time() + ": " + str(row)
+            # print cur_time() + ": " + str(row)
             if row['state'] == 'pending':
                 print cur_time() + ": pending, pushing."
                 print cur_time() + ": pic #" + cur_picture_id + " finished. pushing."
@@ -89,17 +96,17 @@ while True:
                 os.rename(process_dir + mask.replace("$1", "3").replace("$2", "9"), dest_dir + out_name)
                 cursor.close()
                 cursor = connect.cursor(oursql.DictCursor)
-                cursor.execute("UPDATE Picture SET status = '0', state = 'ready', output = ?, updated = NOW() WHERE id = ? LIMIT 1", (out_name, cur_picture_id))
-                
-                requests.get("http://deepdream.akkez.ru/pong?id=" + str(cur_picture_id))
+                cursor.execute("UPDATE Picture SET status = '0', state = 'finishing', output = ?, updated = NOW() WHERE id = ? LIMIT 1", (out_name, cur_picture_id))
+
+                requests.get("http://localhost/pong?id=" + str(cur_picture_id))
             time.sleep(1)
-        
+
         for x1 in range(0, 4):
             for x2 in range(0, 10):
                 pth = process_dir + mask.replace("$1", str(x1)).replace("$2", str(x2))
                 if os.path.exists(pth):
                     os.remove(pth)
-        
+
         print cur_time() + ": starting new process..."
         cursor.close()
         cursor = connect.cursor(oursql.DictCursor)
@@ -118,6 +125,10 @@ while True:
             f = open(pic_id_file, "w")
             f.write(str(row['id']))
             f.close()
+			f = open(algo_file, 'w')
+			f.write(row['algorithm'])
+            f.close()
+			mask = row['algorithm'].replace("/", "-") + '-$1-$2.png'
 
             proc = subprocess.Popen(handler)
             pid = proc.pid
@@ -125,4 +136,5 @@ while True:
             time.sleep(1)
 
     recycle_pid()
-    time.sleep(1)
+    time.sleep(3)
+
