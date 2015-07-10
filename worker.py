@@ -24,11 +24,11 @@ def cur_time():
         return time.strftime("[%Y.%m.%d %H:%M:%S] ")
 
 def is_running(pid):
-        process = subprocess.Popen(cmd, shell=True,
         return os.path.exists("/proc/" + str(pid))
 
 def is_really_running():
         cmd = 'ps x | grep /home/dd/ddd-' + wid + '/deep | grep -v "grep"'
+        process = subprocess.Popen(cmd, shell=True,
                            stdout=subprocess.PIPE,
                            stderr=subprocess.PIPE)
         out, err = process.communicate()
