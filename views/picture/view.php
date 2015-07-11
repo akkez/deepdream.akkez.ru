@@ -4,7 +4,17 @@ $this->title = 'Single picture';
 /* @var $this yii\web\View */
 ShareAsset::register($this);
 ?>
-<h2>Picture</h2>
+<span class="pull-right">
+	<nav>
+		<ul class="pager">
+	<?php if ($picture->id > 1): ?>
+			<li><a href="/picture/<?php echo $picture->id - 1; ?>">&larr; Previous</a></li>
+	<?php endif; ?>
+			<li><a href="/picture/<?php echo $picture->id + 1; ?>">Next &rarr;</a></li>
+		</ul>
+	</nav>
+</span>
+	<h2>Picture</h2>
 <div class="row">
 	<div class="col-md-6 text-center">
 		<img style="max-width: 100%" src="/images/<?php echo $picture->source; ?>" alt=""/>
