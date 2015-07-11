@@ -12,24 +12,29 @@ $this->title = 'Gallery';
 <h1><?= Html::encode($this->title) ?></h1>
 <h4><?php
 
-	foreach ($algorithms as $algo) {
+	foreach ($algorithms as $algo)
+	{
 		$class = $algorithmId == $algo->getPrimaryKey() ? "primary" : "info";
-		?><span style="display: inline-block; margin-bottom: 10px;"><a class="label label-<?php echo $class; ?>" href="/gallery/<?= $algo->id; ?>"><?php echo Html::encode($algo->name); ?> (<?php echo $algo->count; ?>)</a></span> <?php
+		?><span style="display: inline-block; margin-bottom: 10px;"><a class="label label-<?php echo $class; ?>" href="/gallery/<?= $algo->id; ?>"><?php echo Html::encode($algo->name); ?>
+			(<?php echo $algo->count; ?>)</a></span> <?php
 	}
 	?></h4>
 
-<?php foreach ($pictures as $picture)
-{
-	$color = '';
-	if ($picture->ip == Yii::$app->getRequest()->getUserIP())
+<div class="text-center">
+	<?php foreach ($pictures as $picture)
 	{
-		$color = 'background-color: #aaf';
-	}
-	?>
-	<div class="text-center"><?php
-	echo Html::a(Html::img('/ready/' . $picture->output, ['style' => 'max-width: 100%; padding: 15px; cursor: pointer; ' . $color]), '/picture/' . $picture->id);
-	?></div><?php
-} ?>
+		?>
+		<div class="img-container">
+			<a href="/picture/<?php echo $picture->id; ?>">
+				<div class="picture text-center">
+					<img src="/ready/<?php echo $picture->output; ?>" class="i-visible"/>
+					<img src="/images/<?php echo $picture->source; ?>" class="i-hidden"/>
+				</div>
+			</a>
+		</div>
+	<?php
+	} ?>
+</div>
 <?php if (count($pictures) == 0)
 {
 	?><p>There arent any processed images now. Try later.</p><?php
@@ -46,3 +51,20 @@ $this->title = 'Gallery';
 			?></div>
 	</div>
 </div>
+<style>
+	.picture {
+		margin-bottom: 30px;
+	}
+
+	.i-visible, .i-hidden {
+		max-width: 100%;
+	}
+
+	.i-hidden, .picture:hover .i-visible {
+		display: none
+	}
+
+	.i-visible, .picture:hover .i-hidden {
+		display: block
+	}
+</style>
