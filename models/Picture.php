@@ -15,6 +15,7 @@ use Yii;
  * @property string $output
  * @property string $hash
  * @property integer $status
+ * @property integer $priority
  * @property string $algorithm
  * @property integer $algorithmId
  * @property integer $likeCount

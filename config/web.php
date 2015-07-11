@@ -19,6 +19,7 @@ $config = [
 			'rules'           => [
 				''         => 'site/index',
 				'<action>' => 'site/<action>',
+				'upload/<key:[0-9a-f]{32}>' => 'site/upload',
 				'gallery/<algorithmId:\d+>' => 'gallery/index',
 				'<controller>/<id:\d+>' => '<controller>/view',
 			],

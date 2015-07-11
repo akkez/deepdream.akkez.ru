@@ -20,9 +20,18 @@ $this->title = 'Upload';
 ?>
 	<h1><?= Html::encode($this->title) ?></h1>
 
+<?php if (!empty($key))
+{ ?>
+	<div class="alert alert-success">
+		<b><?php echo $key->count - $key->used; ?></b> images left.
+	</div>
+<?php }
+else
+{ ?>
 	<div class="alert alert-info">
 		Your picture will be ready after <b>~<?php echo Helper::formatHourAndMin($readyTime); ?></b>.
 	</div>
+<?php } ?>
 
 <?php echo Html::errorSummary($model); ?>
 <?php $form = ActiveForm::begin([

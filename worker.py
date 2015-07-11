@@ -110,7 +110,7 @@ while True:
         print cur_time() + ": starting new process..."
         cursor.close()
         cursor = connect.cursor(oursql.DictCursor)
-        cursor.execute("SELECT * FROM Picture WHERE state = 'new' ORDER BY id ASC LIMIT 1")
+        cursor.execute("SELECT * FROM Picture WHERE state = 'new' ORDER BY priority DESC, id ASC LIMIT 1")
         row = cursor.fetchone()
         if row is None:
             print cur_time() + ": no pics, waiting for it..."

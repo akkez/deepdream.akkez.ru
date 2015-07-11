@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\helpers\Helper;
 use app\models\Algorithm;
+use app\models\Key;
 use app\models\Picture;
 use Yii;
 use yii\data\ActiveDataProvider;
@@ -37,7 +38,7 @@ class SiteController extends Controller
 		]);
 	}
 
-	public function actionUpload()
+	public function actionUpload($key = null)
 	{
 		$readyPicsCount = Picture::find()->where(['state' => 'ready'])->count();
 		$lastPictures   = Picture::find()->where(['state' => 'ready'])->orderBy('updated ASC')->limit(50)->offset($readyPicsCount - 50)->all();
@@ -85,6 +86,17 @@ class SiteController extends Controller
 			'algorithms'       => $algorithms,
 			'algos'            => $algos,
 		];
+		$priority = 0;
+		if ($key != null)
+		{
+			$keyModel = Key::find()->where(['value' => $key])->andWhere('used < count')->one();
+			if ($keyModel == null)
+			{
+				throw new HttpException(404, "Bad key");
+			}
+			$priority        = $keyModel->priority;
+			$viewData['key'] = $keyModel;
+		}
 
 		$model = new UploadForm();
 		if ($model->load(Yii::$app->request->post()))
@@ -144,6 +156,7 @@ class SiteController extends Controller
 				$picture->state       = 'new';
 				$picture->hash        = $hash;
 				$picture->status      = 0;
+				$picture->priority    = $priority;
 				$picture->algorithm   = $algo->name;
 				$picture->algorithmId = $model->algoId;
 				$picture->save();
@@ -151,7 +164,16 @@ class SiteController extends Controller
 				$algo->count += 1;
 				$algo->save();
 
-				\Yii::$app->getSession()->setFlash('success', 'Your image were successfully uploaded. Converted image will be ready after ~' . Helper::formatHourAndMin($readyTime) . ' and sent on your email. Thank you!');
+				if (!empty($keyModel))
+				{
+					$keyModel->used += 1;
+					$keyModel->save();
+
+					\Yii::$app->getSession()->setFlash('success', 'Your image were successfully uploaded. Converted image will be ready <b>ASAP</b> and sent on your email. Thank you!');
+				} else {
+					\Yii::$app->getSession()->setFlash('success', 'Your image were successfully uploaded. Converted image will be ready after ~' . Helper::formatHourAndMin($readyTime) . ' and sent on your email. Thank you!');
+				}
+
 
 				return $this->redirect('/picture/' . $picture->getPrimaryKey());
 			}
