@@ -34,6 +34,8 @@ class Helper
 
 	public static function formatHourAndMin($seconds)
 	{
+		$seconds += 1800; //experiment
+
 		$hours   = floor($seconds / 3600);
 		$minutes = floor(($seconds - $hours * 3600) / 60);
 
