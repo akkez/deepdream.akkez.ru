@@ -17,6 +17,12 @@
 				<p>Processed image</p>
 			<?php } ?></div>
 	</div>
+	<div class="text-center">
+		<span class='st_facebook_vcount' displayText='Facebook'></span>
+		<span class='st_twitter_vcount' displayText='Tweet'></span>
+		<span class='st_vkontakte_vcount' displayText='Vkontakte'></span>
+		<span class='st_email_vcount' displayText='Email'></span>
+	</div>
 <?php
 if ($picture->state != 'ready')
 {
@@ -33,6 +39,12 @@ if ($picture->state != 'ready')
 	{
 		$status = 'Plz wait';
 	}
-	?><br/><br/><h3>Status: <?php echo \yii\helpers\Html::encode($status); ?></h3><?php
+	?><h3>Status: <?php echo \yii\helpers\Html::encode($status); ?></h3><?php
 }
 ?><h4>Output layer: <?php echo \yii\helpers\Html::encode($picture->algorithm); ?></h4>
+
+	<script type="text/javascript">var switchTo5x = true;</script>
+	<script type="text/javascript" src="https://ws.sharethis.com/button/buttons.js"></script>
+	<script type="text/javascript">stLight.options({publisher: "60d902d6-b24b-4134-8230-d21b9f7115e4", doNotHash: false, doNotCopy: false, hashAddressBar: true});</script>
+<?php
+/* @var $this yii\web\View */
