@@ -20,7 +20,7 @@ $this->title = 'Gallery';
 	}
 	?>
 	<div class="text-center"><?php
-	echo Html::a(Html::img('/ready/' . $picture->output, ['style' => 'padding: 15px; cursor: pointer; ' . $color]), '/picture/' . $picture->id);
+	echo Html::a(Html::img('/ready/' . $picture->output, ['style' => 'max-width: 100%; padding: 15px; cursor: pointer; ' . $color]), '/picture/' . $picture->id);
 	?></div><?php
 } ?>
 <?php if (count($pictures) == 0)

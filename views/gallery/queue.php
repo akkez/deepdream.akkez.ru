@@ -20,7 +20,7 @@ $this->title = 'Queue';
 	}
 	?>
 	<div class="text-center"><?php
-	echo Html::a(Html::img('/images/' . $picture->source, ['style' => 'padding: 15px; ' . $color]), '/picture/' . $picture->id);
+	echo Html::a(Html::img('/images/' . $picture->source, ['style' => 'max-width: 100%; padding: 15px; ' . $color]), '/picture/' . $picture->id);
 	?></div><?php
 } ?>
 <?php if (count($pictures) == 0)
