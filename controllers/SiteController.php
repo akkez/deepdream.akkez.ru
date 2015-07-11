@@ -129,7 +129,7 @@ class SiteController extends Controller
 				{
 					unlink($filename);
 					$first = $count[0];
-					Yii::$app->getSession()->setFlash('success', 'This image was already processed.');
+					Yii::$app->getSession()->setFlash('success', 'This image was already submitted.');
 
 					return $this->redirect('/picture/' . $first->getPrimaryKey());
 				}

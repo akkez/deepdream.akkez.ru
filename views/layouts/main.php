@@ -46,18 +46,18 @@ AppAsset::register($this);
 	NavBar::end();
 	?>
 
-	<?php if (\Yii::$app->getSession()->hasFlash('success'))
-	{
-		echo Html::tag('div', Alert::widget([
-			'options' => [
-				'class' => 'alert-success',
-			],
-			'body'    => \Yii::$app->getSession()->getFlash('success'),
-		]), ['class' => 'container']);
-		\Yii::$app->getSession()->removeFlash('success');
-	}
-	?>
 	<div class="container">
+		<?php if (\Yii::$app->getSession()->hasFlash('success'))
+		{
+			echo Alert::widget([
+				'options' => [
+					'class' => 'alert-success',
+				],
+				'body'    => \Yii::$app->getSession()->getFlash('success'),
+			]);
+			\Yii::$app->getSession()->removeFlash('success');
+		}
+		?>
 		<?= Breadcrumbs::widget([
 			'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
 		]) ?>
