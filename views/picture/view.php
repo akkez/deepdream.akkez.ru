@@ -45,6 +45,6 @@ if ($picture->state != 'ready')
 
 	<script type="text/javascript">var switchTo5x = true;</script>
 	<script type="text/javascript" src="https://ws.sharethis.com/button/buttons.js"></script>
-	<script type="text/javascript">stLight.options({publisher: "60d902d6-b24b-4134-8230-d21b9f7115e4", doNotHash: false, doNotCopy: false, hashAddressBar: true});</script>
+	<script type="text/javascript">stLight.options({publisher: "60d902d6-b24b-4134-8230-d21b9f7115e4", doNotHash: false, doNotCopy: false, hashAddressBar: false});</script>
 <?php
 /* @var $this yii\web\View */
