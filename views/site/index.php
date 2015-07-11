@@ -22,8 +22,6 @@ $this->title = 'DeepDream online';
 		<?php endif; ?>
 		<br/>
 
-		<p class="text-center">Last pictures:</p>
-
 		<div class="row">
 			<div class="col-md-3 text-center img-box">
 				<?php $i = 0;

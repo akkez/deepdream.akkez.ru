@@ -7,6 +7,7 @@ use app\models\Algorithm;
 use app\models\Picture;
 use Yii;
 use yii\data\ActiveDataProvider;
+use yii\db\Expression;
 use yii\web\Controller;
 use app\models\UploadForm;
 use yii\web\HttpException;
@@ -27,7 +28,7 @@ class SiteController extends Controller
 	{
 		$pendingImageCount = Picture::find()->where(['state' => 'new'])->count();
 		$pendingPictures   = Picture::find()->where(['state' => 'pending'])->orderBy('id ASC')->all();
-		$lastReady         = Picture::find()->where(['state' => 'ready'])->orderBy('id DESC')->limit(32)->all();
+		$lastReady         = Picture::find()->where(['state' => 'ready'])->andWhere(['>=', 'created', new Expression('NOW() - INTERVAL 1 DAY')])->orderBy('likeCount DESC, id DESC')->limit(32)->all();
 
 		return $this->render('index', [
 			'pendingImageCount' => $pendingImageCount,
