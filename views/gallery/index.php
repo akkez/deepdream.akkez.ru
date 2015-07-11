@@ -26,7 +26,7 @@ $this->title = 'Gallery';
 		?>
 		<div class="img-container">
 			<a href="/picture/<?php echo $picture->id; ?>">
-				<div class="picture text-center">
+				<div class="picture text-center" style="display: inline-block;">
 					<img src="/ready/<?php echo $picture->output; ?>" class="i-visible"/>
 					<img src="/images/<?php echo $picture->source; ?>" class="i-hidden"/>
 				</div>
