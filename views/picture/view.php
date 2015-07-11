@@ -47,4 +47,21 @@ if ($picture->state != 'ready')
 	}
 	?><h3>Status: <?php echo \yii\helpers\Html::encode($status); ?></h3><?php
 }
-?><h4>Output layer: <?php echo \yii\helpers\Html::encode($picture->algorithm); ?></h4>
+?><h4>Output layer: <?php echo \yii\helpers\Html::encode($picture->algorithm); ?>
+<span class="pull-right">
+	<a class="btn btn-primary like-btn" data-picture-id="<?php echo $picture->id; ?>" data-ignore-this-hahaha="<?php echo $picture->getLikeHash(); ?>">
+		<span class="like-text">Like</span> <span class="glyphicon glyphicon-heart"></span>
+		<?php if ($picture->likeCount != 0)
+		{
+			echo '<span class="count">' . $picture->likeCount . "</span>";
+		}
+		else
+		{
+			echo '<span class="count"></span>';
+		}
+		?>
+	</a>
+</span>
+</h4>
+<?php
+$this->registerJsFile('/js/like.js', ['depends' => ['yii\web\JqueryAsset']]);
