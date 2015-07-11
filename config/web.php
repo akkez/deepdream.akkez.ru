@@ -19,6 +19,7 @@ $config = [
 			'rules'           => [
 				''         => 'site/index',
 				'<action>' => 'site/<action>',
+				'gallery/<algorithmId:\d+>' => 'gallery/index',
 				'<controller>/<id:\d+>' => '<controller>/view',
 			],
 		],

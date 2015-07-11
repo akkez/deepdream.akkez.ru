@@ -10,6 +10,13 @@ use yii\widgets\LinkPager;
 $this->title = 'Gallery';
 ?>
 <h1><?= Html::encode($this->title) ?></h1>
+<h4><?php
+
+	foreach ($algorithms as $algo) {
+		$class = $algorithmId == $algo->getPrimaryKey() ? "primary" : "info";
+		?><span style="display: inline-block; margin-bottom: 10px;"><a class="label label-<?php echo $class; ?>" href="/gallery/<?= $algo->id; ?>"><?php echo Html::encode($algo->name); ?> (<?php echo $algo->count; ?>)</a></span> <?php
+	}
+	?></h4>
 
 <?php foreach ($pictures as $picture)
 {
