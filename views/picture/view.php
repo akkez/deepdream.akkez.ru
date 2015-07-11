@@ -35,3 +35,4 @@ if ($picture->state != 'ready')
 	}
 	?><br/><br/><h3>Status: <?php echo \yii\helpers\Html::encode($status); ?></h3><?php
 }
+?><h4>Output layer: <?php echo \yii\helpers\Html::encode($picture->algorithm); ?></h4>

@@ -124,15 +124,14 @@ class SiteController extends Controller
 				}
 
 				$hash  = sha1(file_get_contents($filename));
-				$count = Picture::find()->where(['hash' => $hash])->count();
-				if ($count > 0)
+				$count = Picture::find()->where(['hash' => $hash, 'algorithmId' => $model->algoId])->all();
+				if (count($count) > 0)
 				{
-					$model->addError('image', 'Sorry, image that you requested are ALREADY in queue. Please wait and/or look into gallery. Thank you!');
 					unlink($filename);
+					$first = $count[0];
+					Yii::$app->getSession()->setFlash('success', 'This image was already processed.');
 
-					$viewData['model'] = $model;
-
-					return $this->render('upload', $viewData);
+					return $this->redirect('/picture/' . $first->getPrimaryKey());
 				}
 				$algo = Algorithm::find()->where(['id' => $model->algoId])->one();
 
@@ -153,7 +152,7 @@ class SiteController extends Controller
 
 				\Yii::$app->getSession()->setFlash('success', 'Your image were successfully uploaded. Converted image will be ready after ~' . Helper::formatHourAndMin($readyTime) . ' and sent on your email. Thank you!');
 
-				return $this->redirect('/');
+				return $this->redirect('/picture/' . $picture->getPrimaryKey());
 			}
 		}
 
