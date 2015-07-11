@@ -30,7 +30,7 @@ class GalleryController extends Controller
 		$countQuery           = clone $query;
 		$pages                = new Pagination(['totalCount' => $countQuery->count(), 'pageSize' => 50]);
 		$pages->pageSizeParam = false;
-		$pictures             = $query->offset($pages->offset)->limit($pages->limit)->orderBy('id desc')->all();
+		$pictures             = $query->offset($pages->offset)->limit($pages->limit)->orderBy('likeCount DESC, id DESC')->all();
 		$algorithms           = Algorithm::find()->orderBy('count DESC')->all();
 
 		return $this->render('index', [
