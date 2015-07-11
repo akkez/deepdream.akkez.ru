@@ -17,6 +17,7 @@ use Yii;
  * @property integer $status
  * @property string $algorithm
  * @property integer $algorithmId
+ * @property integer $likeCount
  */
 class Picture extends \yii\db\ActiveRecord
 {
@@ -67,4 +68,12 @@ class Picture extends \yii\db\ActiveRecord
 		return parent::beforeSave($insert);
 	}
 
+
+	public function getLikeHash()
+	{
+		$key  = 'Te5XipIOXe8i4v1n4e1pLOkCRB08'; # really helpful, isnt it?
+		$text = $this->getPrimaryKey() . '---' . Yii::$app->getRequest()->getUserIP() . '---' . $key;
+
+		return sha1($text);
+	}
 }
