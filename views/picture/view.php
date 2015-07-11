@@ -18,10 +18,10 @@
 			<?php } ?></div>
 	</div>
 	<div class="text-center">
-		<span class='st_facebook_vcount' displayText='Facebook'></span>
-		<span class='st_twitter_vcount' displayText='Tweet'></span>
-		<span class='st_vkontakte_vcount' displayText='Vkontakte'></span>
-		<span class='st_email_vcount' displayText='Email'></span>
+		<span class='st_facebook_hcount' displayText='Facebook'></span>
+		<span class='st_twitter_hcount' displayText='Tweet'></span>
+		<span class='st_vkontakte_hcount' displayText='Vkontakte'></span>
+		<span class='st_email_hcount' displayText='Email'></span>
 	</div>
 <?php
 if ($picture->state != 'ready')
