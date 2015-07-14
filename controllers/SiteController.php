@@ -205,7 +205,7 @@ class SiteController extends Controller
 		$picture->state = 'ready';
 		$picture->save();
 
-		\Yii::$app->mailer->compose('result', ['picture' => $picture])->setTo($picture->email)->setSubject('Your DeepDream picture')->send();
+		\Yii::$app->mail->compose('result', ['picture' => $picture])->setTo($picture->email)->setSubject('Your DeepDream picture')->send();
 		echo 'ok';
 	}
 
