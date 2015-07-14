@@ -1,7 +1,7 @@
 <?php
 
 $params = require(__DIR__ . '/params.php');
-$mailerKey = require(__DIR__ . '/mailerKey.php');
+$mail = require(__DIR__ . '/mail.php');
 
 $config = [
 	'id'         => 'dream',
@@ -34,9 +34,9 @@ $config = [
 		'errorHandler' => [
 			'errorAction' => 'site/error',
 		],
-		'mailer'       => [
-			'class'  => 'nickcv\mandrill\Mailer',
-			'apikey' => $mailerKey,
+		'mail' => [
+			'class' => 'yii\swiftmailer\Mailer',
+			'transport' => $mail,
 		],
 		'log'          => [
 			'traceLevel' => YII_DEBUG ? 3 : 0,
