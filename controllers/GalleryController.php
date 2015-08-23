@@ -22,7 +22,7 @@ class GalleryController extends Controller
 		{
 			throw new HttpException(404, 'Haha but no');
 		}
-		$query = Picture::find()->where(['state' => 'ready']);
+		$query = Picture::find()->where(['state' => 'ready'])->andWhere('likeCount > 0');
 		if ($algorithmId != null)
 		{
 			$query = $query->andWhere(['algorithmId' => $algorithmId]);
