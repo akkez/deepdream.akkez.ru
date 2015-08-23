@@ -29,7 +29,7 @@ class SiteController extends Controller
 	{
 		$pendingImageCount = Picture::find()->where(['state' => 'new'])->count();
 		$pendingPictures   = Picture::find()->where(['state' => 'pending'])->orderBy('id ASC')->all();
-		$lastReady         = Picture::find()->where(['state' => 'ready'])->orderBy('likeCount DESC, id DESC')->limit(32)->all();
+		$lastReady         = Picture::find()->where(['state' => 'ready'])->orderBy('likeCount DESC, id DESC')->limit(100)->all();
 
 		return $this->render('index', [
 			'pendingImageCount' => $pendingImageCount,
