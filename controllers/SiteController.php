@@ -105,6 +105,24 @@ class SiteController extends Controller
 			$model->image = $image;
 			if ($model->validate() && $model->check())
 			{
+				$picture              = new Picture();
+				$picture->email       = $model->email;
+				$picture->ip          = \Yii::$app->getRequest()->getUserIP();
+				$picture->source      = '/';
+				$picture->output      = null;
+				$picture->state       = 'toolate';
+				$picture->hash        = '';
+				$picture->status      = 0;
+				$picture->priority    = $priority;
+				$algo                 = Algorithm::find()->where(['id' => $model->algoId])->one();
+				$picture->algorithm   = $algo->name;
+				$picture->algorithmId = $model->algoId;
+				$picture->save();
+
+				\Yii::$app->getSession()->setFlash('success', 'Sorry, image uploading are disabled.');
+
+				return $this->redirect('/');
+
 				$size = getimagesize($image->tempName);
 				list($width, $height, $type) = $size;
 				if ($type == IMAGETYPE_JPEG)

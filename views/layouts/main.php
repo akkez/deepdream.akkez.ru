@@ -38,7 +38,7 @@ AppAsset::register($this);
 		'items'   => [
 			['label' => 'Home', 'url' => ['/site/index']],
 			['label' => 'Gallery', 'url' => ['/gallery/index']],
-			['label' => 'Queue', 'url' => ['/gallery/queue']],
+//			['label' => 'Queue', 'url' => ['/gallery/queue']],
 			['label' => 'Upload', 'url' => ['/site/upload']],
 			['label' => 'About', 'url' => ['/site/about']],
 		],

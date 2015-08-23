@@ -43,6 +43,8 @@ class GalleryController extends Controller
 
 	public function actionQueue()
 	{
+		throw new HttpException(403, "Uploading & queue are disabled.");
+
 		$query                = Picture::find()->where(['state' => 'new']);
 		$countQuery           = clone $query;
 		$pages                = new Pagination(['totalCount' => $countQuery->count(), 'pageSize' => 50]);
