@@ -32,7 +32,7 @@ $this->title = 'DeepDream online';
 					</a>
 				</div>
 				<?php $i++;
-				if ($i % 8 == 0 && $i < 32) { ?></div>
+				if ($i % 25 == 0 && $i < 100) { ?></div>
 			<div class="col-md-3 text-center img-box"><?php } ?>
 				<?php } ?>
 			</div>
