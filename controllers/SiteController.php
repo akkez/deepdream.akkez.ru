@@ -119,7 +119,7 @@ class SiteController extends Controller
 				$picture->algorithmId = $model->algoId;
 				$picture->save();
 
-				\Yii::$app->getSession()->setFlash('success', 'Sorry, image uploading are disabled. You can use <a href="https://google.com/?q=deepdream+online" target="_blank">other deepdream sites</a>.');
+				\Yii::$app->getSession()->setFlash('success', 'Sorry, image uploading is disabled. You can use <a href="https://google.com/?q=deepdream+online" target="_blank">other deepdream sites</a>.');
 
 				return $this->redirect('/');
 
